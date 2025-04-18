@@ -1,19 +1,19 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { Client } from 'pg';
+// import { Client } from 'pg';
  
-const client = new Client({
-  user: 'user',
-  password: 'password',
-  host: 'db',
-  port: 5432,
-  database: 'pingme',
-})
+// const client = new Client({
+//   user: 'user',
+//   password: 'password',
+//   host: 'db',
+//   port: 5432,
+//   database: 'pingme',
+// })
 
-client
-  .connect()
-  .then(() => console.log("Connected to PostgreSQL"))
-  .catch((err) => console.error("Connection error", err, err.message, err.stack));
+// client
+//   .connect()
+//   .then(() => console.log("Connected to PostgreSQL"))
+//   .catch((err) => console.error("Connection error", err, err.message, err.stack));
 
 const app = express();
 const port = 3000;
@@ -21,15 +21,23 @@ const port = 3000;
 app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
-    client.query("SELECT NOW()", (err, res) => {
-        if (err) {
-            console.error("Query error", err.stack);
-        } else {
-            console.log("Query result:", res.rows);
-        }
-        client.end();
-    });
+    // client.query("SELECT NOW()", (err, res) => {
+    //     if (err) {
+    //         console.error("Query error", err.stack);
+    //     } else {
+    //         console.log("Query result:", res.rows);
+    //     }
+    //     client.end();
+    // });
   res.send('Hello from TypeScript!');
+});
+
+app.get('/authenticate', (req: Request, res: Response) => {
+  if(req.query.mobileNumber == "9573631518") {
+    res.send("Authenticated successfully").status(200);
+  } else {
+    res.send("Invalid mobile number").status(401);
+  }
 });
 
 app.listen(port, () => {

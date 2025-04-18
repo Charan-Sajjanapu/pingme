@@ -1,40 +1,62 @@
-services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./frontend/src:/app/src
+# services:
+#   frontend:
+#     build: ./frontend
+#     ports:
+#       - "3100:3100"
+#     volumes:
+#       - ./frontend/src:/app/src
 
-  db:
-    image: postgres:latest
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=pingme
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+#   # db:
+#   #   image: postgres:latest
+#   #   environment:
+#   #     - POSTGRES_USER=user
+#   #     - POSTGRES_PASSWORD=password
+#   #     - POSTGRES_DB=pingme
+#   #   volumes:
+#   #     - ./data/db:/var/lib/postgresql/data
+#   #   ports:
+#   #     - "5432:5432"
 
-  backend:
-    build: ./backend
-    depends_on:
-      - db
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./backend/src:/app/src
+#   backend:
+#     build: ./backend
+#     # depends_on:
+#     #   - db
+#     ports:
+#       - "3000:3000"
+#     volumes:
+#       - ./backend/src:/app/src
 
   
-  flyway:
-    image: flyway/flyway:latest
-    depends_on:
-      - db
-    environment:
-      - FLYWAY_URL=jdbc:postgresql://db:5432/pingme
-      - FLYWAY_USER=user
-      - FLYWAY_PASSWORD=password
+  # flyway:
+  #   image: flyway/flyway:latest
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - FLYWAY_URL=jdbc:postgresql://db:5432/pingme
+  #     - FLYWAY_USER=user
+  #     - FLYWAY_PASSWORD=password
+  #   volumes:
+  #     - ./data/migrations:/flyway/sql
+  #   command: migrate
+
+
+services:
+  frontend:
+    image : node:latest
+    ports:
+      - "3100:3100"
+    working_dir: /app
+    container_name: frontend
     volumes:
-      - ./data/migrations:/flyway/sql
-    command: migrate
+      - ./frontend:/app
+    command: sh -c "sleep infinity"
+
+  backend:
+    image : node:latest
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    container_name: backend
+    volumes:
+      - ./backend:/app
+    command: sh -c "sleep infinity"
